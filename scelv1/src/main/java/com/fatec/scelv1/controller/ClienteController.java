@@ -45,13 +45,13 @@ public class ClienteController {
 
 	}
 
-	@GetMapping(path = { "/clientes/v1/consulta_id/{id}" })
+	@GetMapping(path = { "/clientes/v1/consulta-id/{id}" })
 	public ResponseEntity<Cliente> findById(@PathVariable long id) {
 		logger.info(">>>>>> 1. controller chamou servico consulta por id");
 		return servico.consultaPorId(id);
 	}
 
-	@GetMapping(path = { "/clientes/v1/consulta_cpf/{cpf}" })
+	@GetMapping(path = { "/clientes/v1/consulta-cpf/{cpf}" })
 	public ResponseEntity<Cliente> findByCpf(@PathVariable String cpf) {
 		logger.info(">>>>>> 1. controller chamou servico consultar cpf");
 		return servico.consultaPorCpf(cpf);

@@ -22,7 +22,7 @@ class REQ04ExcluirClienteJWTTests {
 	private TestRestTemplate testRestTemplate;
    
     @Test
-    public void ct01_givenAuthRequestOnPrivateService_shouldSucceedWith200() throws Exception {
+    public void ct01_dado_que_a_senha_eh_valida_retorna_sucesso_na_consulta() throws Exception {
     	//cadastra usuario
     	ApplicationUser user = new ApplicationUser();
     	user.setUsername("jose");
@@ -39,7 +39,7 @@ class REQ04ExcluirClienteJWTTests {
     	HttpEntity<?> httpEntity2 = new HttpEntity<>(headers);
     	
     	//consulta o servico enviando o token de autenticacao no header
-    	ResponseEntity<Cliente> resposta3 = testRestTemplate.exchange("/api/clientes/v1/consulta_id/{id}", HttpMethod.GET, httpEntity2,Cliente.class,9);
+    	ResponseEntity<Cliente> resposta3 = testRestTemplate.exchange("/api/clientes/v1/consulta-id/{id}", HttpMethod.GET, httpEntity2,Cliente.class,9);
     	Cliente umCliente = resposta3.getBody();
     	assertEquals ("Jose9", umCliente.getNome());
     	//assertTrue(resposta.getHeaders().getContentType().equals(MediaType.APPLICATION_JSON));
@@ -53,7 +53,7 @@ class REQ04ExcluirClienteJWTTests {
     	HttpEntity<ApplicationUser> httpEntity = new HttpEntity<>(user);
     	ResponseEntity<String> resposta = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity, String.class);
     	
-    	//tenta se autenticar para obter o token com a senha errada
+    	//tenta se autenticar para obter o token com a senha invalida
     	user = new ApplicationUser();
     	user.setUsername("maria");
     	user.setPassword("1234");
