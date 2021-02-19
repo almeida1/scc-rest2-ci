@@ -29,8 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	};
 	//caminhos de consulta
 	private static final String[] PUBLIC_MATCHERS_GET = {
-			"/api/clientes/v1/consulta",
-			"/api/clientes/v1/consulta_cpf/{cpf}/**",
+			"/api/v1/clientes",
+			"/api/v1/clientes/{cpf}/**",
 			
 			
 	};

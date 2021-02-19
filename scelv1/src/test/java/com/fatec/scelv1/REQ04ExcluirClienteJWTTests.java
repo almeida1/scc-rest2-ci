@@ -39,7 +39,7 @@ class REQ04ExcluirClienteJWTTests {
     	HttpEntity<?> httpEntity2 = new HttpEntity<>(headers);
     	
     	//consulta o servico enviando o token de autenticacao no header
-    	ResponseEntity<Cliente> resposta3 = testRestTemplate.exchange("/api/clientes/v1/consulta-id/{id}", HttpMethod.GET, httpEntity2,Cliente.class,9);
+    	ResponseEntity<Cliente> resposta3 = testRestTemplate.exchange("/api/v1/clientes/{id}", HttpMethod.GET, httpEntity2,Cliente.class,9);
     	Cliente umCliente = resposta3.getBody();
     	assertEquals ("Jose9", umCliente.getNome());
     	//assertTrue(resposta.getHeaders().getContentType().equals(MediaType.APPLICATION_JSON));
