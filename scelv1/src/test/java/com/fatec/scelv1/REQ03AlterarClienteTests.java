@@ -51,7 +51,7 @@ class REQ03AlterarClienteTests {
 		// Quando temos um objeto optional retornado de um método, pode-se verificar se
 		// existe
 		// um valor nele ou não com o método isPresent ():
-		Cliente clienteAlterado = servico.consultaPorCpf("88888888888").getBody();
+		Object clienteAlterado = servico.consultaPorCpf("88888888888").getBody();
 		// usa-se o get quando temos certeza de que o optional nao esta vazio
 		assertTrue(cliente.equals(clienteAlterado));
 		assertEquals("Cliente atualizado", resposta.getBody());

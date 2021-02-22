@@ -52,7 +52,7 @@ public class ClienteController {
 	}
 
 	@GetMapping(path = { "/v1/clientes/{cpf}" })
-	public ResponseEntity<Cliente> findByCpf(@PathVariable String cpf) {
+	public ResponseEntity<?> findByCpf(@PathVariable String cpf) {
 		logger.info(">>>>>> 1. controller chamou servico consultar cpf");
 		return servico.consultaPorCpf(cpf);
 		

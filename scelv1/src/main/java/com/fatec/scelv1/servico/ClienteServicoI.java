@@ -154,13 +154,18 @@ public class ClienteServicoI implements ClienteServico {
 	}
 
 	@Override
-	public ResponseEntity<Cliente> consultaPorCpf(String cpf) {
-		// return repository.findByCpf(cpf);
-		Optional<Cliente> record = repository.findByCpf(cpf);
-		if (record.isPresent()) {
-			return ResponseEntity.ok().body(record.get());
-		} else
-			return (ResponseEntity.notFound().build());
+	public ResponseEntity<?> consultaPorCpf(String cpf) {
+		boolean numeros = cpf.matches("^\\d+$");
+		if (numeros) {
+			Optional<Cliente> record = repository.findByCpf(cpf);
+			if (record.isPresent()) {
+				return ResponseEntity.ok().body(record.get());
+			} else
+				return ResponseEntity.ok().body("CPF não cadastrado");
+			// return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	// public ResponseEntity<Endereco> obtemEndereco(String cep) {
