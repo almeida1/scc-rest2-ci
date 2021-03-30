@@ -7,21 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.fatec.scelv1.model.Cliente;
-import com.fatec.scelv1.servico.ApplicationUser;
+
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class REQ02ConsultarClienteJWTTests {
 
 	@Autowired
 	private TestRestTemplate testRestTemplate;
-	private Cliente cliente;
+	
 
 	// o endpoint consulta por cpf esta liberado para todos
 	@Test

@@ -2,7 +2,7 @@ package com.fatec.scelv1.servico;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fatec.scelv1.controller.ClienteController;
+import com.fatec.scelv1.model.ApplicationUser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

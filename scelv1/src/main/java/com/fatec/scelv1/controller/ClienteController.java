@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
@@ -45,13 +44,13 @@ public class ClienteController {
 
 	}
 
-	@GetMapping(path = { "/v1/clientes-id/{id}" })
+	@GetMapping(path = { "/v1/clientes/{id}" })
 	public ResponseEntity<Cliente> findById(@PathVariable long id) {
 		logger.info(">>>>>> 1. controller chamou servico consulta por id");
 		return servico.consultaPorId(id);
 	}
 
-	@GetMapping(path = { "/v1/clientes/{cpf}" })
+	@GetMapping(path = { "/v1/cliente/{cpf}" })
 	public ResponseEntity<?> findByCpf(@PathVariable String cpf) {
 		logger.info(">>>>>> 1. controller chamou servico consultar cpf");
 		return servico.consultaPorCpf(cpf);
