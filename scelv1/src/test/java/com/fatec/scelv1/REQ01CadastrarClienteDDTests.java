@@ -27,8 +27,8 @@ class REQ01CadastrarClienteDDTests {
 	
 	@ParameterizedTest
     @CsvSource({
-    	"jose, 123, 66666666666, Carlos, carlos@email, 03694000, 201 CREATED",
-    	"maria, 456, 66666666661, Carlos, carlos@email, 03694000, 201 CREATED",
+    	"jose, 123, 66666666666, Carlos, carlos@email, 03694000, 201 CREATED",       //com sucesso
+    	"maria, 456, 66666666661, Carlos, carlos@email, 03694000, 201 CREATED",      //com sucesso
     	"maria1, 456, 6666666666, Carlos, carlos@email, 03694000, 400 BAD_REQUEST",  //cpf invalido
     	"maria2, 456, 666666666655, Carlos, carlos@email, 03694000, 400 BAD_REQUEST",//cpf invalido
     	"maria3, 456, 6, Carlos, carlos@email, 03694000, 400 BAD_REQUEST", 			//cpf invalido

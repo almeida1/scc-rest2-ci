@@ -30,9 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	//caminhos de consulta
 	private static final String[] PUBLIC_MATCHERS_GET = {
 			"/api/v1/clientes",
-			"/api/v1/clientes/{cpf}/**",
-			
-			
+			"/api/v1/cliente/{cpf}/**",
 	};
 	
     // Create 2 users for demo

@@ -161,8 +161,8 @@ public class ClienteServicoI implements ClienteServico {
 			if (record.isPresent()) {
 				return ResponseEntity.ok().body(record.get());
 			} else
-				return ResponseEntity.ok().body("CPF não cadastrado");
-			// return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				//return ResponseEntity.ok().body("CPF não cadastrado");
+			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
 			return ResponseEntity.notFound().build();
 		}
