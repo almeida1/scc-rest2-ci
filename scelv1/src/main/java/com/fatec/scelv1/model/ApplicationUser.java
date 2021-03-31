@@ -35,5 +35,10 @@ public class ApplicationUser {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	@Override
+	public String toString() {
+		return "ApplicationUser [id=" + id + ", username=" + username + ", password=" + password + "]";
+	}
+	
 	
 }

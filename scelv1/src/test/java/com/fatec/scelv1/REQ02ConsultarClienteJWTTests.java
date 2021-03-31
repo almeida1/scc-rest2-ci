@@ -20,7 +20,17 @@ class REQ02ConsultarClienteJWTTests {
 
 	@Autowired
 	private TestRestTemplate testRestTemplate;
-	
+	// o endpoint consulta por cpf esta liberado para todos
+		@Test
+		public void ct01_quando_consulta_todos_retorna_nove_registros() {
+			// dado que nao existem registros cadastrados
+			// quando - consulta 
+			
+	    	ResponseEntity<Cliente[]> resposta = testRestTemplate.getForEntity("/api/v1/clientes", Cliente[].class);
+	    	Cliente[] listaDeClientes = resposta.getBody();
+			// entao
+			assertEquals(9, listaDeClientes.length);
+		}
 
 	// o endpoint consulta por cpf esta liberado para todos
 	@Test

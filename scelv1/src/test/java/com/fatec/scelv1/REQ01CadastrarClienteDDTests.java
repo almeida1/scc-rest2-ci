@@ -2,7 +2,11 @@ package com.fatec.scelv1;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -11,29 +15,35 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-
 import com.fatec.scelv1.model.ApplicationUser;
 import com.fatec.scelv1.model.Cliente;
-import com.fatec.scelv1.model.ClienteRepository;
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class REQ01CadastrarClienteJWTTests {
 
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+class REQ01CadastrarClienteDDTests {
+	Logger logger = LogManager.getLogger(REQ01CadastrarClienteDDTests.class);
 	@Autowired
 	private TestRestTemplate testRestTemplate;
-	private Cliente cliente;
-	@Autowired
-	private ClienteRepository repository;
-
-	@Test
-	public void ct01_quando_dados_validos_cadastra_o_cliente_com_sucesso() {
+	
+	@ParameterizedTest
+    @CsvSource({
+    	"jose, 123, 66666666666, Carlos, carlos@email, 03694000, 201 CREATED",
+    	"maria, 456, 66666666661, Carlos, carlos@email, 03694000, 201 CREATED",
+    	"maria1, 456, 6666666666, Carlos, carlos@email, 03694000, 400 BAD_REQUEST",  //cpf invalido
+    	"maria2, 456, 666666666655, Carlos, carlos@email, 03694000, 400 BAD_REQUEST",//cpf invalido
+    	"maria3, 456, 6, Carlos, carlos@email, 03694000, 400 BAD_REQUEST", 			//cpf invalido
+    	"maria4, 456, , Carlos, carlos@email, 03694000, 400 BAD_REQUEST", 			//cpf invalido
+    	"maria5, 456, 6666666666, , carlos@email, 03694000, 400 BAD_REQUEST", 		//nome invalido
+    	"maria6, 456, 6666666666, Carlos, , 03694000, 400 BAD_REQUEST", 			//email invalido
+    	"maria7, 456, 6666666666, Carlos, carlos@email, 036, 400 BAD_REQUEST" 		//cpf invalido
+    })
+	public void ct01_validacao_do_cadastro(String id, String senha, String cpf, String nome, String email, String cep, String re) {
 		//**************************************************************************************
 		//dado que o usuario foi autenticado com sucesso 
 		//**************************************************************************************
     	ApplicationUser user = new ApplicationUser();
-    	user.setUsername("silva");
-    	user.setPassword("123");
+    	user.setUsername(id);
+    	user.setPassword(senha);
        	HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
        	ResponseEntity<String> resposta1 = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity1, String.class);
        	assertEquals(HttpStatus.OK, resposta1.getStatusCode());
@@ -45,20 +55,14 @@ class REQ01CadastrarClienteJWTTests {
     	//**************************************************************************************  	
     	//quando o usuario solicita o cadastro com o token valido
     	//**************************************************************************************
-    	cliente = new Cliente("66666666666", "Carlos", "carlos@email", "03694000");
+    	Cliente cliente = new Cliente(cpf, nome, email, cep);
        	HttpEntity<Cliente> httpEntity3 = new HttpEntity<>(cliente, headers);
 		ResponseEntity<String> resposta2 = testRestTemplate.exchange("/api/v1/clientes", HttpMethod.POST, httpEntity3,
 				String.class);
 		//**************************************************************************************
-		//entao o cliente eh cadastrado com sucesso
+		//entao valida o cadastro do cliente
 		//**************************************************************************************
-		assertEquals(HttpStatus.CREATED, resposta2.getStatusCode());
-	}
-	@Test
-	public void ct02_quando_cpf_invalido_erro_no_cadastro() {
-		//**************************************************************************************
-		//dado que o cpf do cliente esta invalido
-		//**************************************************************************************
+		assertEquals(re, resposta2.getStatusCode().toString());
 		
 	}
-	}
+}
