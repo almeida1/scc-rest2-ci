@@ -27,8 +27,8 @@ import com.fatec.scelv1.model.Cliente;
 import com.fatec.scelv1.model.ClienteRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class REQ03AlterarClienteDDTests {
-	Logger logger = LogManager.getLogger(REQ03AlterarClienteDDTests.class);
+class REQ03AlterarClienteTests {
+	Logger logger = LogManager.getLogger(REQ03AlterarClienteTests.class);
 	@Autowired
 	private TestRestTemplate testRestTemplate;
 	@Autowired

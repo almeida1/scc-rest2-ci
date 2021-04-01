@@ -18,7 +18,7 @@ import com.fatec.scelv1.model.Cliente;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class REQ05LoginJWTTests {
+class REQ05LoginTests {
 	@Autowired
 	private TestRestTemplate testRestTemplate;
 	private Cliente cliente;
