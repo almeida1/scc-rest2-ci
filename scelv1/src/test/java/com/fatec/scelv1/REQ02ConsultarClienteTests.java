@@ -1,158 +1,169 @@
 package com.fatec.scelv1;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
+import com.fatec.scelv1.model.ApplicationUser;
 import com.fatec.scelv1.model.Cliente;
-
+import com.fatec.scelv1.model.ClienteRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class REQ02ConsultarClienteTests {
+	@Autowired
+	private TestRestTemplate testRestTemplate;
 
 	@Autowired
-	private TestRestTemplate restTemplate;
-	private Cliente cliente;
+	ClienteRepository repository;
+	ArrayList<Long> ids;
 
-	@Test
-	public void ct01_quando_consulta_todos_entao_retorna_array() {
-		//dado que - existem clientes cadastrados
-		//quando solicita consulta todos
-		//RestTemplate restTemplate = new RestTemplate();//com testresttemplate nao deve ser definido o caminho com localhost
-		ResponseEntity<Cliente[]> resposta = restTemplate.withBasicAuth("jose", "123").getForEntity("/api/clientes/v1/consulta", Cliente[].class);
-		
-		Cliente[] array = resposta.getBody();
-		//Cliente umCliente = array[0];
-		//umCliente.getNome();
-		//entao 
-		assertEquals(9, array.length);
-		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+	public void inicializa() {
+		repository.deleteAll();
+		Cliente umCliente = new Cliente("66666666666", "Carlos", "carlos@email", "03694000");
+		repository.save(umCliente);
+		umCliente = new Cliente("77777777777", "Carlos", "carlos@email", "03694000");
+		repository.save(umCliente);
+		ids = new ArrayList<Long>();
+		List<Cliente> clientes = repository.findAll();
+		clientes.forEach(cliente -> {
+			ids.add(cliente.getId());
+		});
+		ids.forEach(id -> System.out.println("ids validos nesta sessao=>" + id.toString()));
 	}
+
+	// acesso sem token
 	@Test
-	public void ct02_quando_consulta_todos_retorna_um_List() {
-		//dado que - existem clientes cadastrados
-		//quando solicita consulta todos
-		ResponseEntity<List<Cliente>> resposta = 
-				  restTemplate.withBasicAuth("jose", "123")
-				  .exchange(
-					"/api/clientes/v1/consulta",
-				    HttpMethod.GET,
-				    null,
-				    new ParameterizedTypeReference<List<Cliente>>() {}
-				  );
-		//então
-		List<Cliente> clientes = resposta.getBody();
-		Cliente umCliente = clientes.get(1);
-		clientes.contains(umCliente);
-		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+	public void ct01_consultar_todos() {
+		inicializa();
+		ResponseEntity<Cliente[]> resposta = testRestTemplate.getForEntity("/api/v1/clientes", Cliente[].class);
+		Cliente[] listaDeClientes = resposta.getBody();
+		// entao
+		assertEquals(2, listaDeClientes.length);
+
 	}
+	
 	@Test
-	public void ct03_deveMostrarTodosClientes() {
-		ResponseEntity<String> resposta = restTemplate.withBasicAuth("jose", "123").exchange("/api/clientes/v1/consulta", HttpMethod.GET, null,
+	public void ct02_quando_cliente_cadastrado_consulta_por_id_retorna_ok() {
+		inicializa();
+		Long id = ids.get(0);
+		// **************************************************************************************
+		// dado que o usuario foi autenticado com sucesso
+		// **************************************************************************************
+		ApplicationUser user = new ApplicationUser();
+		user.setUsername("jose");
+		user.setPassword("123");
+		HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
+		ResponseEntity<String> resposta1 = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity1,
 				String.class);
-		assertEquals(HttpStatus.OK, resposta.getStatusCode());
-	}
-
-	// o metodo exchange é um metodo generico com diversas assinaturas que pode
-	// executar
-	// qualquer metodo http, no geral o que ele faz é excutar uma requisição e
-	// encapsular a resposta
-	// em um ReponseEntity
-	// exchange("url",HttpMethod.GET,httpEntity(header ou body passado na
-	// requisição), Integer.class(indica o tipo
-	// do retorno da resposta)
-	@Test
-	public void ct04_deveMostrarTodosClientesUsandoList() {
-		ParameterizedTypeReference<List<Cliente>> tipoRetorno = new ParameterizedTypeReference<List<Cliente>>() {
-		};
-		ResponseEntity<List<Cliente>> resposta = restTemplate.withBasicAuth("jose", "123").exchange("/api/clientes/v1/consulta", HttpMethod.GET, null,
-				tipoRetorno);
-
-		assertEquals(HttpStatus.OK, resposta.getStatusCode());
-//		assertTrue(resposta.getHeaders().getContentType().equals(MediaType.APPLICATION_JSON));
-		assertEquals(9, resposta.getBody().size());
-
-	}
-
-	@Test
-	public void ct05_deveMostrarUmCliente() {
-		cliente = new Cliente("11111111119", "Jose9", "jose9@email", "043309");
-        long id = 9;
-		cliente.setId(id);
-		cliente.setEndereco("Rua Sao Paulo9");
-        //para o uso de generics exchange é a melhor opção
-		ResponseEntity<Cliente> resposta = restTemplate.withBasicAuth("jose", "123").exchange("/api/clientes/v1/consulta_id/{id}", HttpMethod.GET, null,
-				Cliente.class, 9);
-
-		assertEquals(HttpStatus.OK, resposta.getStatusCode());
-		assertTrue(resposta.getHeaders().getContentType().equals(MediaType.APPLICATION_JSON));
-		assertEquals(id, resposta.getBody().getId());
-	}
-	@Test
-	public void ct06_deveRetornarContatoNaoEncontrado() {
+		assertEquals(HttpStatus.OK, resposta1.getStatusCode());
+		// tenta se autenticar para obter o token
+		resposta1 = testRestTemplate.exchange("/login", HttpMethod.POST, httpEntity1, String.class);
+		assertEquals(HttpStatus.OK, resposta1.getStatusCode());
+		// armazena o token no header do post
+		HttpHeaders headers = resposta1.getHeaders();
+		// **************************************************************************************
+		// quando o usuario solicita a consulta por id com o token valido
+		// **************************************************************************************
+		HttpEntity<Cliente> httpEntity3 = new HttpEntity<>(headers);
+		ResponseEntity<Cliente> resposta2 = testRestTemplate.exchange("/api/v1/clientes/" + id, HttpMethod.GET, httpEntity3,
+				Cliente.class);
+		assertEquals("200 OK", resposta2.getStatusCode().toString());
 		
-		ResponseEntity<Cliente> resposta = restTemplate.withBasicAuth("jose", "123").exchange("/api/clientes/v1/consulta_id/{id}", HttpMethod.GET, null,
-				Cliente.class, 99);
+		// **************************************************************************************
+		// entao valida o cadastro do cliente
+		// **************************************************************************************
+		Cliente cliente = resposta2.getBody();
+		assertEquals("Carlos", cliente.getNome());
 
-		assertEquals(HttpStatus.NOT_FOUND, resposta.getStatusCode()); //valida comportamento
-		assertNull(resposta.getBody()); //valida o estado
+	}
+	@ParameterizedTest
+    @CsvSource({
+    	"jose1, 123, 99, 404 NOT_FOUND",   
+    	"jose2, 123, , 400 BAD_REQUEST",    
+    	"jose3, 123,% , 403 FORBIDDEN"  // The request was rejected because the URL contained a potentially malicious String "%25"  
+    
+    })
+	public void ct03_consulta_id_invalido_retorna_nao_encontrado(String userid, String senha, String id, String re) {
+		inicializa();
 		
+		// **************************************************************************************
+		// dado que o usuario foi autenticado com sucesso
+		// **************************************************************************************
+		ApplicationUser user = new ApplicationUser();
+		user.setUsername(userid);
+		user.setPassword(senha);
+		HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
+		ResponseEntity<String> resposta1 = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity1,
+				String.class);
+		assertEquals(HttpStatus.OK, resposta1.getStatusCode());
+		// tenta se autenticar para obter o token
+		resposta1 = testRestTemplate.exchange("/login", HttpMethod.POST, httpEntity1, String.class);
+		assertEquals(HttpStatus.OK, resposta1.getStatusCode());
+		// armazena o token no header do post
+		HttpHeaders headers = resposta1.getHeaders();
+		// **************************************************************************************
+		// quando o usuario solicita a consulta por id com token valido
+		// **************************************************************************************
+		HttpEntity<Cliente> httpEntity3 = new HttpEntity<>(headers);
+		ResponseEntity<Cliente> resposta2 = testRestTemplate.exchange("/api/v1/clientes/" + id, HttpMethod.GET, httpEntity3,
+				Cliente.class);
+		// **************************************************************************************
+		// entao retorna erro
+		// **************************************************************************************
+		assertEquals(re, resposta2.getStatusCode().toString());
 	}
-	//alem do exchange é possivel realizar chamadas com metodos mais especificos
-		// metodo getForEntity realiza a chamada para um endereco, converte o resultado
-		// no tipo passado como parametro e vai encapsular em um ResponseEntity
-		// diferentemente do exchange estes metodos não recebem o Parameterized
-	@Test
-	public void ct07_deveMostrarUmClienteComGetForEntity() {
-		cliente = new Cliente("11111111119", "Jose9", "jose9@email", "043309");
-		long id = 9;
-		cliente.setId(id);
+	@ParameterizedTest
+    @CsvSource({
+    	"jose4, 123, 66666666666, 200 OK",   
+    	"jose5, 123, 888888888888, 404 NOT_FOUND", 
+    	"jose6, 123, 6, 404 NOT_FOUND",  
+    	"jose7, 123, , 404 NOT_FOUND",  
+    	"jose8, 123,% , 403 FORBIDDEN"  // The request was rejected because the URL contained a potentially malicious String "%25"  
+    
+    })
+	public void ct04_consulta_cpf_invalido_retorn_nao_encontrado(String userid, String senha, String cpf, String re) {
+		inicializa();
 		
-		cliente.setEndereco("Rua Sao Paulo9");
-		ResponseEntity<Cliente> resposta =
-				restTemplate.withBasicAuth("jose", "123").getForEntity("/api/clientes/v1/consulta_id/{id}", Cliente.class,cliente.getId());
-		assertEquals(HttpStatus.OK, resposta.getStatusCode());
-		assertTrue(resposta.getHeaders().getContentType().equals(MediaType.APPLICATION_JSON));
-		//assertEquals(cliente, resposta.getBody()); //valida estado
+		// **************************************************************************************
+		// dado que o usuario foi autenticado com sucesso
+		// **************************************************************************************
+		ApplicationUser user = new ApplicationUser();
+		user.setUsername(userid);
+		user.setPassword(senha);
+		HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
+		ResponseEntity<String> resposta1 = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity1,
+				String.class);
+		assertEquals(HttpStatus.OK, resposta1.getStatusCode());
+		// tenta se autenticar para obter o token
+		resposta1 = testRestTemplate.exchange("/login", HttpMethod.POST, httpEntity1, String.class);
+		assertEquals(HttpStatus.OK, resposta1.getStatusCode());
+		// armazena o token no header do post
+		HttpHeaders headers = resposta1.getHeaders();
+		// **************************************************************************************
+		// quando o usuario solicita a consulta por cpf com o token valido
+		// **************************************************************************************
+		HttpEntity<?> httpEntity3 = new HttpEntity<>(headers);
+		ResponseEntity<String> resposta2 = testRestTemplate.exchange("/api/v1/cliente/" + cpf, HttpMethod.GET, httpEntity3,
+				String.class);
+		//ResponseEntity<String> resposta2 = testRestTemplate.getForEntity("/api/v1/cliente/{cpf}", String.class,cpf);
+		// **************************************************************************************
+		// entao valida o resultado esperado
+		// **************************************************************************************
+		assertEquals(re, resposta2.getStatusCode().toString());
 	}
-	
-	@Test
-	public void ct08_quando_consulta_id_valido_retorna_cliente() {
-		//dado que o id existe
-		long id = 9;
-		//quando - consulta por id
-		Cliente resposta = 	restTemplate.withBasicAuth("jose", "123").getForObject("/api/clientes/v1/consulta_id/{id}", Cliente.class,id);
-		//entao
-		assertEquals("Jose9", resposta.getNome());
-	}
-	@Test
-	public void ct09_quando_consulta_id_invalido_retorna_cliente() {
-		//dado que o id existe
-		//quando - consulta por id
-		ResponseEntity<Cliente> resposta = restTemplate.withBasicAuth("jose", "123").exchange("/api/clientes/v1/consulta_id/{id}", HttpMethod.GET, null,
-				Cliente.class, 19);
-
-		assertEquals(HttpStatus.NOT_FOUND,resposta.getStatusCode());
-		
-	}
-	@Test
-	public void ct10_quando_consulta_cpf_valido_retorna_cliente() {
-		Cliente resposta =
-				restTemplate.withBasicAuth("jose", "123").getForObject("/api/clientes/v1/consulta_cpf/{cpf}", Cliente.class,"11111111119");
-		assertEquals("Jose9", resposta.getNome());
-		
-	}
-	
 }
