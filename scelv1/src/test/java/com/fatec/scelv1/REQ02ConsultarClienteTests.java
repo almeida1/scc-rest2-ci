@@ -65,7 +65,7 @@ class REQ02ConsultarClienteTests {
 		// dado que o usuario foi autenticado com sucesso
 		// **************************************************************************************
 		ApplicationUser user = new ApplicationUser();
-		user.setUsername("jose");
+		user.setUsername("carlos");
 		user.setPassword("123");
 		HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
 		ResponseEntity<String> resposta1 = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity1,

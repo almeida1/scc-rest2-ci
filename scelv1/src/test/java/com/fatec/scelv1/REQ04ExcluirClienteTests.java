@@ -35,11 +35,11 @@ class REQ04ExcluirClienteTests {
     	"jose, 123, 1, 200 OK",       //com sucesso
     	"jose1, 123, 0, 404 NOT_FOUND"       //com sucesso
     })
-	void ct01_quando_cliente_eh_alterado_com_dados_validos_retorna_alteracao_com_sucesso(String userId, String senha, Long i, String re) {
+	void ct01_quando_cliente_cadastrado_com_dados_validos_retorna_excluido_com_sucesso(String userId, String senha, Long i, String re) {
 		// **************************************************************************************
-		// dado que o usuario foi autenticado com sucesso e o cliente que sofre a alteração esta cadastrado
+		// dado que o usuario foi autenticado com sucesso e o cliente que sofre a exclusao esta cadastrado
 		// **************************************************************************************
-		Cliente cliente = new Cliente("88888888888", "Carlos Jose9", "carlos_jose9@email", "03694000");
+		Cliente cliente = new Cliente("88888888889", "Carlos Jose9", "carlos_jose9@email", "03694000");
 		cliente.setEndereco("Avenida Águia de Haia");
 		clienteRepository.save(cliente);
 		ApplicationUser user = new ApplicationUser();
@@ -55,19 +55,17 @@ class REQ04ExcluirClienteTests {
 		// armazena o token no header do post
 		HttpHeaders headers = resposta1.getHeaders();
 		// **************************************************************************************
-		// quando o usuario confirma a alteracao com token valido
+		// quando o usuario confirma a exclusao com token valido
 		// **************************************************************************************
 		 HttpEntity<Cliente> httpEntity = new HttpEntity<>(headers);		
 		ResponseEntity<Cliente> resposta = testRestTemplate.exchange("/api/v1/clientes/{id}", HttpMethod.DELETE, httpEntity,
 				Cliente.class, 1);
 		// **************************************************************************************
-		// o cliente eh alterado no banco de dados
+		// entao na consulta retorna nao localizado
 		// **************************************************************************************
 		long id = i;
 		Optional<Cliente> registro = clienteRepository.findById(id);
 		assertTrue(registro.isEmpty());
-		
-		
 		assertEquals(re, resposta.getStatusCode().toString());
 	}
 

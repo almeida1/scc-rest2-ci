@@ -44,7 +44,7 @@ class REQ03AlterarClienteTests {
 		cliente.setEndereco("Avenida Águia de Haia");
 		clienteRepository.save(cliente);
 		ApplicationUser user = new ApplicationUser();
-		user.setUsername("jose");
+		user.setUsername("antonio");
 		user.setPassword("123");
 		HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
 		ResponseEntity<String> resposta1 = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity1,
