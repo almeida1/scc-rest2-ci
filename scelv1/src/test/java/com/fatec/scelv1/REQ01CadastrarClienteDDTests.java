@@ -21,7 +21,7 @@ import com.fatec.scelv1.model.Cliente;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class REQ01CadastrarClienteDDTests {
-	Logger logger = LogManager.getLogger(REQ01CadastrarClienteDDTests.class);
+	
 	@Autowired
 	private TestRestTemplate testRestTemplate;
 	
@@ -29,13 +29,13 @@ class REQ01CadastrarClienteDDTests {
     @CsvSource({
     	"jose, 123, 66666666666, Carlos, carlos@email, 03694000, 201 CREATED",       //com sucesso
     	"maria, 456, 66666666661, Carlos, carlos@email, 03694000, 201 CREATED",      //com sucesso
-    	"maria1, 456, 6666666666, Carlos, carlos@email, 03694000, 400 BAD_REQUEST",  //cpf invalido
-    	"maria2, 456, 666666666655, Carlos, carlos@email, 03694000, 400 BAD_REQUEST",//cpf invalido
-    	"maria3, 456, 6, Carlos, carlos@email, 03694000, 400 BAD_REQUEST", 			//cpf invalido
-    	"maria4, 456, , Carlos, carlos@email, 03694000, 400 BAD_REQUEST", 			//cpf invalido
-    	"maria5, 456, 6666666666, , carlos@email, 03694000, 400 BAD_REQUEST", 		//nome invalido
-    	"maria6, 456, 6666666666, Carlos, , 03694000, 400 BAD_REQUEST", 			//email invalido
-    	"maria7, 456, 6666666666, Carlos, carlos@email, 036, 400 BAD_REQUEST" 		//cpf invalido
+    	"maria1, 456, 6666666666, Carlos, carlos@email, 03694000, 400 BAD_REQUEST",  //cpf invalido 10 carac
+    	"maria2, 456, 666666666655, Carlos, carlos@email, 03694000, 400 BAD_REQUEST",//cpf invalido 12 carac
+    	"maria3, 456, 6, Carlos, carlos@email, 03694000, 400 BAD_REQUEST", 			//cpf invalido  1 carac
+    	"maria4, 456, , Carlos, carlos@email, 03694000, 400 BAD_REQUEST", 			//cpf invalido  branco
+    	"maria5, 456, 6666666666, , carlos@email, 03694000, 400 BAD_REQUEST", 		//nome invalido  branco
+    	"maria6, 456, 6666666666, Carlos, , 03694000, 400 BAD_REQUEST", 			//email invalido branco
+    	"maria7, 456, 6666666666, Carlos, carlos@email, 036, 400 BAD_REQUEST" 		//cep invalido  
     })
 	public void ct01_validacao_do_cadastro(String id, String senha, String cpf, String nome, String email, String cep, String re) {
 		//**************************************************************************************

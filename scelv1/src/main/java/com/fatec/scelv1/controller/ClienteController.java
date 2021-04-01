@@ -73,6 +73,7 @@ public class ClienteController {
 	@PutMapping(value = "/v1/clientes/{id}")
 	public ResponseEntity<Object> update(@PathVariable("id") long id, @RequestBody @Valid Cliente cliente) {
 		logger.info(">>>>>> 1. controller chamou servico atualiza");
+		System.out.println(">>>>>>>>>>>>>>>>>>> controller chamou atualiza " + cliente.toString());
 		return servico.atualiza(id, cliente);
 	}
 
