@@ -12,7 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.fatec.scelv1.controller.ClienteController;
+
 /*
  * recupera as mensagens de erro do objeto getbindingresult retorna o responseentity
  * com uma lista de strings com o status bad_request

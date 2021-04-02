@@ -1,8 +1,5 @@
 package com.fatec.scelv1;
 
-import java.util.stream.LongStream;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.MessageSource;
@@ -10,10 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import com.fatec.scelv1.model.ApplicationUser;
-import com.fatec.scelv1.model.ApplicationUserRepository;
-import com.fatec.scelv1.model.Cliente;
-import com.fatec.scelv1.model.ClienteRepository;
 
 @SpringBootApplication
 public class Scelv1Application {

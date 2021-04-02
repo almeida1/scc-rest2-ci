@@ -188,14 +188,17 @@ public class ClienteServicoI implements ClienteServico {
 		try {
 			response = template.getForEntity(url, Endereco.class, cep, new ParameterizedTypeReference<Endereco>() {
 			});
-			logger.info(">>>>>> servico obtem endereco " + url + "/" + cep);
-			logger.info(">>>>>> servico obtem endereco " + url + "/" + response.getBody());
-			if (response.getBody().getLogradouro() != null)
+			logger.info(">>>>>> 2. servico tenta obter o endereco " + url + "/" + cep + "-" + response.getBody());
+			if (response.getBody().getLogradouro() != null) {
 				return response;
-			else
+			}
+			else {
+				logger.info(">>>>>> 2. endereco nao encontrado " + url + "/" + cep );
 				return ResponseEntity.notFound().build();
+				
+			}
 		} catch (HttpClientErrorException e) {
-			logger.info(">>>>>> servico obtem endereco erro " + url + "/" + cep);
+			logger.info(">>>>>> 2. servico obtem endereco erro nao esperado " + url + "/" + cep);
 			return ResponseEntity.notFound().build();
 		}
 
