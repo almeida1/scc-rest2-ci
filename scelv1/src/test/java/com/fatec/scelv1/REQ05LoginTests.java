@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import com.fatec.scelv1.model.ApplicationUser;
 import com.fatec.scelv1.model.Cliente;
 
-
+/*
+ * valida login
+ */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class REQ05LoginTests {
 	@Autowired
