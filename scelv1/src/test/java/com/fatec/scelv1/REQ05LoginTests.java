@@ -29,7 +29,7 @@ class REQ05LoginTests {
 		//dado que o login de usuario 
 		//**************************************************************************************
 		ApplicationUser user = new ApplicationUser();
-    	user.setUsername("jose");
+    	user.setUsername("josex");
     	user.setPassword("123");
        	HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
        	//**************************************************************************************
@@ -47,16 +47,15 @@ class REQ05LoginTests {
 		//dado que o login de usuario foi cadastrado
 		//**************************************************************************************
     	ApplicationUser user = new ApplicationUser();
-    	user.setUsername("maria");
-    	user.setPassword("123");
+    	user.setUsername("mariax");
+    	user.setPassword("1234");
        	HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
        	ResponseEntity<String> resposta1 = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity1, String.class);
        	assertEquals(HttpStatus.OK, resposta1.getStatusCode());
        	//**************************************************************************************
         //quando o usuario tenta se autenticar com senha invalida
        	//**************************************************************************************
-    	user.setUsername("maria");
-    	user.setPassword("1234");
+    	user.setPassword("456");
        	httpEntity1 = new HttpEntity<>(user);
        	resposta1 = testRestTemplate.exchange("/login", HttpMethod.POST,  httpEntity1, String.class);
        	//**************************************************************************************
@@ -70,8 +69,8 @@ class REQ05LoginTests {
 		//dado que o usuario foi autenticado com sucesso 
 		//**************************************************************************************
     	ApplicationUser user = new ApplicationUser();
-    	user.setUsername("silva");
-    	user.setPassword("123");
+    	user.setUsername("silvax");
+    	user.setPassword("1235");
        	HttpEntity<ApplicationUser> httpEntity1 = new HttpEntity<>(user);
        	ResponseEntity<String> resposta1 = testRestTemplate.exchange("/users/sign-up", HttpMethod.POST, httpEntity1, String.class);
        	assertEquals(HttpStatus.OK, resposta1.getStatusCode());
@@ -83,7 +82,7 @@ class REQ05LoginTests {
     	//**************************************************************************************  	
     	//quando o usuario solicita o cadastro com o token valido
     	//**************************************************************************************
-    	cliente = new Cliente("66666666666", "Carlos", "carlos@email", "03694000");
+    	cliente = new Cliente("66666666668", "Carlos", "carlos@email", "03694000");
        	HttpEntity<Cliente> httpEntity3 = new HttpEntity<>(cliente, headers);
 		ResponseEntity<String> resposta2 = testRestTemplate.exchange("/api/v1/clientes", HttpMethod.POST, httpEntity3,
 				String.class);

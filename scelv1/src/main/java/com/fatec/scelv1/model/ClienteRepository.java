@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 	Optional<Cliente> findByCpf(String cpf);
-	@Transactional
-	@Modifying
+	Optional<Cliente> findById(Long id);
 	@Query("DELETE FROM Cliente WHERE cpf = :cpf")
 	void deleteByCpf(@Param("cpf") String cpf);
 }
