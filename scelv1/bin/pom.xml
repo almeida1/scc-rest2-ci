@@ -13,8 +13,12 @@
 	<artifactId>scelv1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>scelv1</name>
-	<description>Demo project for Spring Boot</description>
-
+	<description>Projeto de referencia para desenvolvimento de scripts para automação de teste</description>
+	<organization>
+		<name>Centro Paula Sousa - Curso ADS - Disciplina Teste de Software</name>
+		<url>http://www.fateczl.edu.br/</url>
+	</organization>
+	<inceptionYear>2021</inceptionYear>
 	<properties>
 		<java.version>8</java.version>
 	</properties>
@@ -60,13 +64,18 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
-
-
 		<!-- spring security JUNIT test -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 		</dependency>
+		<!-- maven-pmd-plugin -->
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-pmd-plugin</artifactId>
+			<version>3.14.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -82,6 +91,26 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<!-- Code Coverage report generation -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.9</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>generate-code-coverage-report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
