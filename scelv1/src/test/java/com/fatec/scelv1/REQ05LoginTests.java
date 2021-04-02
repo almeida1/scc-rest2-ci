@@ -17,7 +17,7 @@ import com.fatec.scelv1.model.ApplicationUser;
 import com.fatec.scelv1.model.Cliente;
 
 /*
- * valida login
+ * valida login - autenticacao
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class REQ05LoginTests {
