@@ -24,7 +24,9 @@ public class ClienteServicoI implements ClienteServico {
 	Logger logger = LogManager.getLogger(ClienteServicoI.class);
 	@Autowired
 	ClienteRepository repository;
-
+	/**
+	 * CT - REQ02ConsultarCliente
+	 */
 	@Override
 	public ResponseEntity<List<Cliente>> consultaTodos() {
 		List<Cliente> clientes = repository.findAll();
@@ -37,15 +39,18 @@ public class ClienteServicoI implements ClienteServico {
 	// da
 	// aplicação da função de mapeamento no valor, caso contrário, retorna um
 	// ResponseEntity not foud.
+	/**
+	 * CT - REQ02ConsultarCliente
+	 */
 	@Override
 	public ResponseEntity<Cliente> consultaPorId(Long id) {
-		logger.info(">>>>>> servico consulta por id chamado");
+		logger.info(">>>>>> 2. servico consulta por id chamado");
 		return repository.findById(id).map(record -> ResponseEntity.ok().body(record))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	public ResponseEntity<Cliente> consultaPorId2(Long id) {
-		logger.info(">>>>>> servico consulta por id chamado");
+		logger.info(">>>>>> 2. servico consulta por id chamado");
 		Optional<Cliente> cliente = repository.findById(id);
 		if (cliente.isPresent()) {
 			return ResponseEntity.ok().body(cliente.get());
@@ -55,7 +60,7 @@ public class ClienteServicoI implements ClienteServico {
 	}
 
 	public ResponseEntity<Cliente> consultaPorId3(Long id) {
-		logger.info(">>>>>> servico consulta por id chamado");
+		logger.info(">>>>>> 2. servico consulta por id chamado");
 		Optional<Cliente> cliente = repository.findById(id);
 		if (cliente.isPresent()) {
 			return new ResponseEntity<Cliente>(cliente.get(), HttpStatus.OK);
@@ -66,7 +71,9 @@ public class ClienteServicoI implements ClienteServico {
 	// No Java SE 7 e versões posteriores é possível substituir os tipos
 	// de argumentos requeridos na invocação de um construtor de
 	// uma classe genérica usando um conjunto vazio (<>)
-
+	/**
+	 * CT - REQ01CadastrarCliente
+	 */
 	@Override
 	public ResponseEntity<Object> save(Cliente cliente) {
 		Optional<Cliente> umCliente = repository.findByCpf(cliente.getCpf());
@@ -107,6 +114,9 @@ public class ClienteServicoI implements ClienteServico {
 //			return ResponseEntity.ok().body(updated);
 //		}).orElse(ResponseEntity.notFound().build());
 //	}
+	/**
+	 * CT - REQ03AlteraCliente
+	 */
 	@Override
 	public ResponseEntity<Object> atualiza(long id, Cliente cliente) {
 		Optional<Cliente> record = repository.findById(id);
@@ -141,7 +151,9 @@ public class ClienteServicoI implements ClienteServico {
 			return ResponseEntity.ok().build();
 		}).orElse(ResponseEntity.notFound().build());
 	}
-
+	/**
+	 * CT - REQ04ExcluirCliente
+	 */
 	@Override
 	public ResponseEntity<Object> remover(Long id) {
 		Optional<Cliente> umCliente = repository.findById(id);
@@ -152,7 +164,9 @@ public class ClienteServicoI implements ClienteServico {
 			return ResponseEntity.notFound().build();
 		}
 	}
-
+	/**
+	 * CT - REQ02ConsultarCliente
+	 */
 	@Override
 	public ResponseEntity<?> consultaPorCpf(String cpf) {
 		boolean numeros = cpf.matches("^\\d+$");
@@ -181,6 +195,9 @@ public class ClienteServicoI implements ClienteServico {
 	// }
 
 	// }
+	/**
+	 * CT - REQ01CadastrarCliente
+	 */
 	public ResponseEntity<Endereco> obtemEndereco(String cep) {
 		RestTemplate template = new RestTemplate();
 		ResponseEntity<Endereco> response = null;

@@ -48,7 +48,7 @@ class REQ02ConsultarClienteTests {
 
 	// acesso sem token
 	@Test
-	public void ct01_consultar_todos() {
+	public void ct01_quando_consulta_todos_retorna_todos_clientes_cadastrados() {
 		inicializa();
 		ResponseEntity<Cliente[]> resposta = testRestTemplate.getForEntity("/api/v1/clientes", Cliente[].class);
 		Cliente[] listaDeClientes = resposta.getBody();
